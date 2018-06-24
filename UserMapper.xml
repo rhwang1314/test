@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="UserMapper">
+
+   <resultMap id="userMap" type="User">
+        <id property="id" column="id" javaType="java.lang.Integer"></id>
+        <result property="username" column="username" javaType="java.lang.String"></result>
+        <result property="password" column="password" javaType="java.lang.String"></result>
+        <result property="account" column="account" javaType="java.lang.String"></result>
+    </resultMap>
+
+    <!--插入user -->
+    <insert id="insertUser" useGeneratedKeys="true" keyProperty="id" parameterType="user">
+        insert into t_user (username,password,account) values (#{username},#{password},#{account})
+    </insert>
+    
+    <!--删除user 我觉得这里使用包装类更好 -->
+    <delete id="deleteUser" parameterType="int">
+     delete from t_user where id=#{id}  
+    </delete>
+    
+    <!--更新user 这里用一下动态SQL -->
+    <update id="updateUser" parameterType="user">
+      update t_user
+           <trim prefix="set" suffixOverrides=",">
+                <if test="username != null and username != ''">
+                    username = #{username},
+                </if>
+                <if test="password != null and password != ''">
+                    password = #{password},
+                </if>
+                <if test="account != null and account != ''">
+                    account = #{account},
+                </if>
+            </trim>
+         
+         where id=#{id}
+    </update>
+    
+    
+   
+     <!--根据id查user -->
+    <select id="selectUserById" parameterType="int" resultMap="userMap">
+     select * from t_user where id=#{id}
+    </select>
+    
+    <!--查所有 -->
+    <select id="selectAllUser" resultMap="userMap">
+     select * from t_user
+    </select>
+    
+    
+    <!--这里用包装类取查，这里装一下用一下普通的动态SQL -->
+    <select id="selectUser" parameterType="user" resultMap="userMap">
+     select * from t_user
+    <where>
+        <if test="user != null"> 
+           <if test="username != null and username != ''">
+             and  username=#{username}
+            </if>
+             
+            <if test="account != null and account != ''">
+               and account=#{account}
+            </if>
+           <if test="password != null and password != ''">
+             and  password=#{password}
+            </if>            
+         </if>   
+        </where>  
+    </select>
+    
+    
+</mapper>
