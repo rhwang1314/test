@@ -1,0 +1,8 @@
+CREATE TABLE `t_user` (
+`id`  int NULL AUTO_INCREMENT ,
+`username`  varchar(255) NULL ,
+`password`  varchar(255) NULL ,
+`account`  varchar(255) NULL ,
+PRIMARY KEY (`id`)
+)
+;
